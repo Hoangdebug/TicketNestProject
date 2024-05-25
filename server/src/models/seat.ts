@@ -16,9 +16,9 @@ var seatSchema = new mongoose.Schema({
         required:true,
     },
     status:{
-        type:Boolean,
-        enum:Array,
-        required:false,
+        type:String,        
+        required:'False',
+        enum:['True','False']
     },
 });
 
