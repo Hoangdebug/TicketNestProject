@@ -12,11 +12,12 @@ var ticketSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    seatCode:{
+    seatcode:{
+        seatcode: {type:mongoose.Types.ObjectId, ref:'Seat'},
         type:String,
         required:true,
     },
-    Time:{
+    time:{
         type:Date,
         required:true,
     },
