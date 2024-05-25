@@ -1,3 +1,5 @@
+import { timeStamp } from "console";
+
 const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
@@ -14,10 +16,27 @@ var eventSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    password:{
+    time:{
+        type:Date,
+        required:true,
+    },
+    ticket_number:{
+        type:Number,
+        enum:['50', '60', '70']
+    },
+    price:{
+        type:Number,
+        required:true,
+    },
+    place:{
         type:String,
         required:true,
     },
+    status:{
+        type:String,
+        default: 'Pending',
+        enum:['Cancelled', 'Pending', 'Successed']
+    }
 });
 
 //Export the model
