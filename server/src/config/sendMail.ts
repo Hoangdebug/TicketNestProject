@@ -20,7 +20,7 @@ const sendMail =  asyncHandler(async ({email, html} : {email: string, html: stri
             subject: "Forgot password", // Subject line
             text: `Hello,\n\nPlease use the following code to reset your password:\n`,
             html: html, // html body
-            text: `From VHEcommerce`
+            // text: `From VHEcommerce`
           });
           
          return info 
