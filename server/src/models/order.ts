@@ -8,9 +8,7 @@ var orderSchema = new mongoose.Schema({
         enum:['Cancelled', 'Pending', 'Successed']
     },
     seatcode:{      
-        seatcode: {type:mongoose.Types.ObjectId, ref:'Seat'},
-        type:String,
-        required:true,
+        seatcode: {type:mongoose.Types.ObjectId, ref:'Seat'},        
     },
     totalmoney:{
         type:Number,

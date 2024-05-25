@@ -7,9 +7,7 @@ var seatSchema = new mongoose.Schema({
         required:true,
     },
     username:{
-        user: {type:mongoose.Types.ObjectId, ref:'User'},
-        type:String,
-        required:true,
+        user: {type:mongoose.Types.ObjectId, ref:'User'},       
     },
     seatcode:{        
         type:String,
