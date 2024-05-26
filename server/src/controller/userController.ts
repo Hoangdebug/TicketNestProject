@@ -7,14 +7,16 @@ const crypto = require('crypto')
 const sendMail = require('../config/sendMail')
 
 const register = asyncHandler( async (req: Request, res: Response) => {
-    const { email, password, lastname, firstname, mobile } = req.body
-    if(!email || !password || !firstname || !lastname || !mobile)
+    const { email, password, username, dob, phone } = req.body
+    console.log(req.body);
+    
+    if(!email || !password || !dob || !username || !phone)
     return res.status(400).json({
         success: false,
         mes: "Missing input"
     })
 
-    const user = await User.findOne({email, mobile})
+    const user = await User.findOne({email, phone})
     if(user)
         throw new Error('User has existed')
     else{
