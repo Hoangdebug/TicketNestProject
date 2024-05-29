@@ -36,7 +36,18 @@ const isAdmin = asyncHandler((req: CustomRequest, res: Response, next: NextFunct
     next()
 })
 
+const isOrganizer = asyncHandler((req: CustomRequest, res: Response, next: NextFunction) => {
+    const {role} = req.user
+    if(role!== 'ROLE_ORGANIZER')
+    return res.status(401).json({
+        success: false,
+        mes: 'Require organizer authority to access this page'
+    })
+    next()
+})
+
 module.exports = {
     verifyAccessToken,
-    isAdmin
+    isAdmin,
+    isOrganizer
 }

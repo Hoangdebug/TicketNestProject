@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-const { generateAccessToken, generateRefreshToken } = require('../middlewares/jwt')
+const { generateAccessToken, generateRefreshToken } = require('../config/jwt')
 const User = require('../models/user')
 const asyncHandler = require("express-async-handler")
 const jwt = require('jsonwebtoken')
@@ -180,12 +180,34 @@ const updateUser = asyncHandler(async(req: Request, res: Response) => {
 
 //Cập nhập tài khoản người dùng bởi admin
 const updateUserbyAdmin = asyncHandler(async(req: Request, res: Response) => {
-    const { uid } = req.params
+    const { _id } = req.params
     if(Object.keys(req.body).length === 0) throw new Error('Please modified information!!!')
-    const response = await User.findByIdAndUpdate(uid, req.body, {new: true}).select('-password -role -refreshToken')
+    const response = await User.findByIdAndUpdate(_id, req.body, {new: true}).select('-password -role -refreshToken')
     return res.status(200).json({
         success: response ? true : false,
         updateUser: response ? response : 'Something went wrong!!!!'
+    })
+})
+
+//Cấm tài khoản người dùng bởi user
+const banUserByAdmin = asyncHandler(async(req: Request, res: Response) => {
+    const { _id } = req.params
+    if(!_id) throw new Error('Please modified Id!!!')
+    const response = await User.findByIdAndUpdate(_id, {isBlocked: true}, {new: true}).select('-password -role -refreshToken')
+    return res.status(200).json({
+        success: response ? true : false,
+        updateUser: response ? response : 'Something went wrong!!!!'
+    })
+})
+
+
+const uploadImage= asyncHandler(async(req: Request, res: Response) => {
+    const { _id } = req.params
+    if(!req.files) throw new Error('Missing input files')
+    const response = await User.findByIdAndUpdate(_id, {$push: {image: {$each: req.files.map((el: {path: string}) => el.path)}}}, {new: true})
+    return res.status(200).json({
+        status: response ? true : false,
+        uploadUser: response ? response : 'Can not upload file!!!!'
     })
 })
 
@@ -212,4 +234,6 @@ module.exports = {
     updateUser,
     updateUserbyAdmin,
     updateAddress,
+    banUserByAdmin,
+    uploadImage
 }
