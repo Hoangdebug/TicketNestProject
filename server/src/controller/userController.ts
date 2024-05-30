@@ -23,6 +23,7 @@ const register = asyncHandler( async (req: Request, res: Response) => {
         const newUser = await User.create(req.body)
         return res.status(200).json({
             success: newUser ? true : false,
+            code: newUser ? 200 : 500,
             mes: newUser ? 'Create successfully' : 'Invalid information'
         })
     }

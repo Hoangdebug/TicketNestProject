@@ -10,13 +10,16 @@ var userSchema = new mongoose.Schema({
         required:true,
     },
     dob:{
-        type:Date,
+        type:String,
         required:true,
     },
     email:{
         type:String,
         required:true,
         unique:true,
+    },
+    images:{
+        type:Array,
     },
     gender:{
         type:String,
@@ -56,6 +59,10 @@ var userSchema = new mongoose.Schema({
     },
     passwordResetExpire:{
         type:String,
+    },
+    type:{
+        type:String,
+        default:'User',
     }
 },{
     timestamps: true,
