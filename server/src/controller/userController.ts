@@ -7,10 +7,10 @@ const crypto = require('crypto')
 const sendMail = require('../config/sendMail')
 
 const register = asyncHandler( async (req: Request, res: Response) => {
-    const { email, password, username, dob, phone } = req.body
+    const { email, password, username, phone } = req.body
     console.log(req.body);
     
-    if(!email || !password || !dob || !username || !phone)
+    if(!email || !password  || !username || !phone)
     return res.status(400).json({
         success: false,
         mes: "Missing input"
