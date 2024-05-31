@@ -19,7 +19,7 @@ var userSchema = new mongoose.Schema({
         unique:true,
     },
     images:{
-        type:Array,
+        type:String,
     },
     gender:{
         type:String,
