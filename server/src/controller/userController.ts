@@ -13,6 +13,7 @@ const register = asyncHandler( async (req: Request, res: Response) => {
     if(!email || !password || !dob || !username || !phone)
     return res.status(400).json({
         success: false,
+        code: 400,
         mes: "Missing input"
     })
 
@@ -23,7 +24,7 @@ const register = asyncHandler( async (req: Request, res: Response) => {
         const newUser = await User.create(req.body)
         return res.status(200).json({
             success: newUser ? true : false,
-            code: newUser ? 200 : 500,
+            code: newUser ? 200 : 400,
             mes: newUser ? 'Create successfully' : 'Invalid information'
         })
     }
@@ -37,6 +38,7 @@ const login = asyncHandler( async (req: Request, res: Response) => {
     if(!email || !password)
     return res.status(400).json({
         success: false,
+        code: 400,
         mes: "Missing input"
     })
 
@@ -54,6 +56,7 @@ const login = asyncHandler( async (req: Request, res: Response) => {
         res.cookie('refreshToken', newrefreshToken, {httpOnly: true, maxAge: 720000})
         return res.status(200).json({
             success: true,
+            code: 200,
             accessToken,
             userData
         })
@@ -68,6 +71,7 @@ const getCurrent = asyncHandler( async (req: Request, res: Response) => {
     const user = await User.findById(_id).select('-refreshToken -password -role')
     return res.status(200).json({
         success: user ? true : false,
+        code: user ? 200 : 400,
         rs: user ? user : 'User not found'
     })
 })
@@ -81,6 +85,7 @@ const refreshAccessToken = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.findOne({ _id: rs._id, refreshToken: cookie.refreshToken })
     return res.status(200).json({
         success: response ? true : false,
+        code: response? 200 : 400,
         newAccessToken: response ? generateAccessToken(response._id, response.role) : 'Refresh Token invalid'
     })
 })

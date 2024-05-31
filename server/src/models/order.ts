@@ -4,7 +4,7 @@ const mongoose = require('mongoose'); // Erase if already required
 var orderSchema = new mongoose.Schema({    
     status:{
         type:String,        
-        required:'Pending',
+        default:'Pending',
         enum:['Cancelled', 'Pending', 'Successed']
     },
     seatcode:{      
