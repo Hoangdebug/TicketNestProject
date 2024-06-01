@@ -14,7 +14,7 @@ const register = asyncHandler( async (req: Request, res: Response) => {
     return res.status(400).json({
         success: false,
         code: 400,
-        mes: "Missing input"
+        rs: "Missing input"
     })
 
     const user = await User.findOne({email, phone})
@@ -25,7 +25,8 @@ const register = asyncHandler( async (req: Request, res: Response) => {
         return res.status(200).json({
             success: newUser ? true : false,
             code: newUser ? 200 : 400,
-            mes: newUser ? 'Create successfully' : 'Invalid information'
+            mes: newUser ? "Create successfully" : "Can not create user",
+            rs: newUser ? newUser : 'Invalid information'
         })
     }
 })
@@ -39,7 +40,7 @@ const login = asyncHandler( async (req: Request, res: Response) => {
     return res.status(400).json({
         success: false,
         code: 400,
-        mes: "Missing input"
+        rs: "Missing input"
     })
 
     const response = await User.findOne({ email })
@@ -72,6 +73,7 @@ const getCurrent = asyncHandler( async (req: Request, res: Response) => {
     return res.status(200).json({
         success: user ? true : false,
         code: user ? 200 : 400,
+        mess : user ? 'User found' : 'User not found',
         rs: user ? user : 'User not found'
     })
 })
@@ -102,7 +104,7 @@ const logout = asyncHandler(async(req: Request, res: Response) => {
     })
     return res.status(200).json({
         success: true,
-        message: "Log out successfully"
+        rs: "Log out successfully"
     })
 })
 
@@ -161,7 +163,8 @@ const getAllUser = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.find().select('-refreshToken -password -role')
     return res.status(200).json({
         success: response ? true : false,
-        code: response ? 200 : 400,
+        code: response ? 200 : 400, 
+        mes: response ? 'Get all users' : 'Can not get all users', 
         rs: response
     })
 })
@@ -186,6 +189,7 @@ const updateUser = asyncHandler(async(req: Request, res: Response) => {
     return res.status(200).json({
         success: response ? true : false,
         code: response ? 200 : 400,
+        mes: response ? `User with email ${response.email} had been updated` : 'Update user failed',
         rs: response ? response : 'Something went wrong!!!!',
     })
 })
@@ -198,7 +202,8 @@ const updateUserbyAdmin = asyncHandler(async(req: Request, res: Response) => {
     return res.status(200).json({
         success: response ? true : false,
         code: response ? 200 : 400,
-        rs: response ? response : 'Something went wrong!!!!'
+        mes: response ? `User with email ${response.email} had been updated` : 'Update user failed',
+        rs: response ? response : 'Something went wrong!!!!',
     })
 })
 
@@ -210,6 +215,7 @@ const banUserByAdmin = asyncHandler(async(req: Request, res: Response) => {
     return res.status(200).json({
         success: response ? true : false,
         code: response ? 200 : 400,
+        mes: response ? `User with email ${response.email} had been ban` : 'Ban user failed',
         rs: response ? response : 'Something went wrong!!!!'
     })
 })
@@ -222,6 +228,7 @@ const uploadImage= asyncHandler(async(req: Request, res: Response) => {
     return res.status(200).json({
         status: response ? true : false,
         code: response ? 200 : 400,
+        mes: response ? 'Image uploaded successfully' : 'Can not upload image',
         rs: response ? response : 'Can not upload file!!!!'
     })
 })
@@ -233,6 +240,7 @@ const updateAddress = asyncHandler(async(req: Request, res: Response) => {
     return res.status(200).json({
         success: response ? true : false,
         code: response ? 200 : 400,
+        mes: response ? 'Update address successfull' : 'Can not update address',
         rs: response ? response : 'Something went wrong!!!!'
     })
 })
