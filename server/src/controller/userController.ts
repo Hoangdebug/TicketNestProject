@@ -13,7 +13,8 @@ const register = asyncHandler( async (req: Request, res: Response) => {
     if(!email || !password  || !username || !phone)
     return res.status(400).json({
         success: false,
-        mes: "Missing input"
+        code: 400,
+        rs: "Missing input"
     })
 
     const user = await User.findOne({email, phone})
@@ -23,7 +24,9 @@ const register = asyncHandler( async (req: Request, res: Response) => {
         const newUser = await User.create(req.body)
         return res.status(200).json({
             success: newUser ? true : false,
-            mes: newUser ? 'Create successfully' : 'Invalid information'
+            code: newUser ? 200 : 400,
+            mes: newUser ? "Create successfully" : "Can not create user",
+            rs: newUser ? newUser : 'Invalid information'
         })
     }
 })
@@ -36,7 +39,8 @@ const login = asyncHandler( async (req: Request, res: Response) => {
     if(!email || !password)
     return res.status(400).json({
         success: false,
-        mes: "Missing input"
+        code: 400,
+        rs: "Missing input"
     })
 
     const response = await User.findOne({ email })
@@ -53,6 +57,7 @@ const login = asyncHandler( async (req: Request, res: Response) => {
         res.cookie('refreshToken', newrefreshToken, {httpOnly: true, maxAge: 720000})
         return res.status(200).json({
             success: true,
+            code: 200,
             accessToken,
             userData
         })
@@ -64,9 +69,11 @@ const login = asyncHandler( async (req: Request, res: Response) => {
 
 const getCurrent = asyncHandler( async (req: Request, res: Response) => {
     const { _id } = req.user
-    const user = await User.findById(_id).select('-refreshToken -password -role')
+    const user = await User.findById(_id).select('-refreshToken -password')
     return res.status(200).json({
         success: user ? true : false,
+        code: user ? 200 : 400,
+        mess : user ? 'User found' : 'User not found',
         rs: user ? user : 'User not found'
     })
 })
@@ -80,7 +87,8 @@ const refreshAccessToken = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.findOne({ _id: rs._id, refreshToken: cookie.refreshToken })
     return res.status(200).json({
         success: response ? true : false,
-        newAccessToken: response ? generateAccessToken(response._id, response.role) : 'Refresh Token invalid'
+        code: response? 200 : 400,
+        rs: response ? generateAccessToken(response._id, response.role) : 'Refresh Token invalid'
     })
 })
 
@@ -96,10 +104,11 @@ const logout = asyncHandler(async(req: Request, res: Response) => {
     })
     return res.status(200).json({
         success: true,
-        message: "Log out successfully"
+        rs: "Log out successfully"
     })
 })
 
+//New format change
 //Client gửi email
 //Sever check email có hợp lệ hay không => Gửi mail và kèm theo link (password change token)
 //Client check mail => click link
@@ -143,7 +152,9 @@ const resetPassword = asyncHandler(async(req: Request, res: Response) => {
     await user.save()
     return res.status(200).json({
         success: user ? true : false,
-        mes: user? 'Update password' : 'Something went wrong'
+        code: user ? 200 : 400,
+        mes: user? 'Update password' : 'Something went wrong',
+        rs: user,
     })
 })
 
@@ -152,7 +163,9 @@ const getAllUser = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.find().select('-refreshToken -password -role')
     return res.status(200).json({
         success: response ? true : false,
-        users: response
+        code: response ? 200 : 400, 
+        mes: response ? 'Get all users' : 'Can not get all users', 
+        rs: response
     })
 })
 
@@ -163,7 +176,8 @@ const deleteUser = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.findByIdAndDelete(_id)
     return res.status(200).json({
         success: response ? true : false,
-        deletedUser: response ? `User with email ${response.email} had been deleted` : 'User not found'
+        code: response ? 200 : 400,
+        rs: response ? `User with email ${response.email} had been deleted` : 'User not found'
     })
 })
 
@@ -174,7 +188,9 @@ const updateUser = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.findByIdAndUpdate(_id, req.body, {new: true}).select('-password -role')
     return res.status(200).json({
         success: response ? true : false,
-        updateUser: response ? response : 'Something went wrong!!!!'
+        code: response ? 200 : 400,
+        mes: response ? `User with email ${response.email} had been updated` : 'Update user failed',
+        rs: response ? response : 'Something went wrong!!!!',
     })
 })
 
@@ -185,7 +201,9 @@ const updateUserbyAdmin = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.findByIdAndUpdate(_id, req.body, {new: true}).select('-password -role -refreshToken')
     return res.status(200).json({
         success: response ? true : false,
-        updateUser: response ? response : 'Something went wrong!!!!'
+        code: response ? 200 : 400,
+        mes: response ? `User with email ${response.email} had been updated` : 'Update user failed',
+        rs: response ? response : 'Something went wrong!!!!',
     })
 })
 
@@ -196,7 +214,9 @@ const banUserByAdmin = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.findByIdAndUpdate(_id, {isBlocked: true}, {new: true}).select('-password -role -refreshToken')
     return res.status(200).json({
         success: response ? true : false,
-        updateUser: response ? response : 'Something went wrong!!!!'
+        code: response ? 200 : 400,
+        mes: response ? `User with email ${response.email} had been ban` : 'Ban user failed',
+        rs: response ? response : 'Something went wrong!!!!'
     })
 })
 
@@ -207,7 +227,9 @@ const uploadImage= asyncHandler(async(req: Request, res: Response) => {
     const response = await User.findByIdAndUpdate(_id, {$push: {image: {$each: req.files.map((el: {path: string}) => el.path)}}}, {new: true})
     return res.status(200).json({
         status: response ? true : false,
-        uploadUser: response ? response : 'Can not upload file!!!!'
+        code: response ? 200 : 400,
+        mes: response ? 'Image uploaded successfully' : 'Can not upload image',
+        rs: response ? response : 'Can not upload file!!!!'
     })
 })
 
@@ -217,7 +239,9 @@ const updateAddress = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.findByIdAndUpdate(_id, {$push: {address: req.body.address}}, {new: true}).select('-password -role -refreshToken')
     return res.status(200).json({
         success: response ? true : false,
-        updatedUser: response ? response : 'Something went wrong!!!!'
+        code: response ? 200 : 400,
+        mes: response ? 'Update address successfull' : 'Can not update address',
+        rs: response ? response : 'Something went wrong!!!!'
     })
 })
 

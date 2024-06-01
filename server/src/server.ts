@@ -5,6 +5,7 @@ import {dbConnect} from './config/dbConnect'
 require('dotenv').config()
 const initRoutes = require("./routes/index")
 const cookieParser = require("cookie-parser")
+const cors = require("cors")
 
 // Khởi tạo ứng dụng Express
 const app = express();
@@ -12,6 +13,7 @@ const port = process.env.PORT || 8080
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(cors())
 dbConnect()
 initRoutes(app)
 
