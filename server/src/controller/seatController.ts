@@ -24,8 +24,9 @@ const getSeat = asyncHandler(async (req: Request, res: Response) => {
         success: getseat ? true : false,
         code: getseat ? 200 : 400,
         message: getseat ? 'Create' : 'Fail',
-        rs: getseat ? getseat : 'Cannot create new seat'
-    })})
+        rs: getseat ? getseat : 'Cannot read that seat'
+    })
+})
 
 
 // function to update one Seat
@@ -38,7 +39,8 @@ const updateSeat = asyncHandler(async (req: Request, res: Response) => {
         code: updatedSeat ? 200 : 400,
         message: updatedSeat ? 'Create' : 'Fail',
         rs: updatedSeat ? updatedSeat : 'Cannot create new seat'
-    })})
+    })
+})
 
 module.exports = {
     createSeat,
