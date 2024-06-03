@@ -1,7 +1,7 @@
 import { Application } from "express"
 
 const userRouter = require("./userRouter")
-const seatRouter = require("./seat")
+const seatRouter = require("./seatRouter")
 const { notFound, errHandler } = require('../middlewares/errorHandler')
 
 const initRoutes = (app: Application) => {
