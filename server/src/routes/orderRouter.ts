@@ -1,10 +1,11 @@
 import express from 'express'
 const router = express.Router()
-const orderRouter = require('../controller/orderController')
+const ctrls = require('../controller/orderController')
+const { verifyAccessToken, isAdmin, isOrganizer} = require('../middlewares/verifyToken')
 
-router.post('/', orderRouter.createOrder);
-router.get('/:id', orderRouter.getOrder);
-router.put('/:id', orderRouter.updateOrder); 
-router.delete('/:id', orderRouter.deleteOrder);
+router.post('/', ctrls.createOrder);
+router.get('/:id', ctrls.getOrder);
+router.put('/:id', ctrls.updateOrder); 
+router.delete('/:id', ctrls.deleteOrder);
 
 module.exports = router
