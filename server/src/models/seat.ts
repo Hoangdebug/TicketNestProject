@@ -3,8 +3,8 @@ const mongoose = require('mongoose'); // Erase if already required
 // Declare the Schema of the Mongo model
 var seatSchema = new mongoose.Schema({
     type:{
-        type:Array,
-        required:true,
+        type:String,
+        enum:['Normal, Vip1, Vip2, Vip Plus']
     },
     username:{
         user: {type:mongoose.Types.ObjectId, ref:'User'},       
@@ -15,7 +15,7 @@ var seatSchema = new mongoose.Schema({
     },
     status:{
         type:String,        
-        required:'False',
+        default: 'False',
         enum:['True','False']
     },
 });
