@@ -10,21 +10,22 @@ const createSeat = asyncHandler(async (req: Request, res: Response) => {
     if (Object.keys(req.body).length = 0) throw new Error("Missing inputs")
     const newSeat = await seat.create(req.body)
     return res.status(200).json({
-        success: newSeat ? true : false,
+        status: newSeat ? true : false,
         code: newSeat ? 200 : 400,
-        message: newSeat ? 'Create' : 'Fail',
-        rs: newSeat ? newSeat : 'Cannot create new seat'
-    })})
+        message: newSeat ? "Create seat successfully" : "Can not create seat",
+        result: newSeat ? newSeat : 'Invalid information'
+    })
+})
 
 // function to get one Seat
 const getSeat = asyncHandler(async (req: Request, res: Response) => {
     const { sid } = req.params
     const getseat = await seat.findById(sid)
     return res.status(200).json({
-        success: getseat ? true : false,
+        status: getseat ? true : false,
         code: getseat ? 200 : 400,
-        message: getseat ? 'Create' : 'Fail',
-        rs: getseat ? getseat : 'Cannot read that seat'
+        message: getseat ? "Get seat successfully" : "Can not get seats",
+        result: getseat ? getseat : 'Invalid information'
     })
 })
 
@@ -35,10 +36,10 @@ const updateSeat = asyncHandler(async (req: Request, res: Response) => {
     const { sid } = req.params
     const updatedSeat = await seat.findByIdAndUpdate(sid, req.body, { new: true })
     return res.status(200).json({
-        success: updatedSeat ? true : false,
+        status: updatedSeat ? true : false,
         code: updatedSeat ? 200 : 400,
-        message: updatedSeat ? 'Create' : 'Fail',
-        rs: updatedSeat ? updatedSeat : 'Cannot create new seat'
+        message: updatedSeat ? "Update seat successfully" : "Can not update seat",
+        result: updatedSeat ? updatedSeat : 'Invalid information'
     })
 })
 
