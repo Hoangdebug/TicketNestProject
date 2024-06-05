@@ -18,10 +18,10 @@ const createEvent = asyncHandler(async (req: Request, res: Response) => {
     });    
     await event.save();
     return res.status(200).json({
-        success: event ? true : false ,
+        status: event ? true : false ,
         code: event ? 200 : 400,
-        mes: event ? 'Event created successfully' : 'Failed to create event',
-        rs: event
+        message: event ? 'Event created successfully' : 'Failed to create event',
+        result: event
     });
 })
 
@@ -31,9 +31,10 @@ const readEvent = asyncHandler(async (req: Request, res: Response) => {
     const event = await Event.findById(id);
 
     return res.status(200).json({
-        success: event ? true : false,
+        status: event ? true : false,
         code: event ? 200 : 404,
-        rs: event ? event : 'Event not found'
+        message: event ? 'Get event information successfully' : 'Event not found', 
+        result: event
     });
 })
 
@@ -45,9 +46,10 @@ const updateEvent = asyncHandler(async (req: Request, res: Response) => {
     const event = await Event.findByIdAndUpdate(id, updates, { new: true });
 
     return res.status(200).json({
-        success: event ? true : false,
+        status: event ? true : false,
         code: event ? 200 : 400,
-        rs: event ? event : 'Event not found',
+        message: event ? 'Update event successfully' : 'Event not found', 
+        result: event
     });
 })
 
