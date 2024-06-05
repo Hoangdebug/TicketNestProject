@@ -14,18 +14,18 @@ const createOrder = asyncHandler(async (req: Request, res: Response) => {
 
     if (!seatcode || !totalmoney || !settime) {
         return res.status(400).json({
-            success: false,
+            status: false,
             code: 400,
-            rs: 'All fields are required'
+            result: 'All fields are required'
         })
     }    
     
     await order.save()
     return res.status(200).json({
-        success: order ? true : false,
+        status: order ? true : false,
         code: order ? 200 : 400,
-        mes: order ? 'Order created successfully' : 'Failed to create order',
-        rs: order
+        message: order ? 'Order created successfully' : 'Failed to create order',
+        result: order
     })
 })
 
@@ -34,10 +34,10 @@ const getOrder = asyncHandler(async (req: Request, res: Response) => {
     const order = await Order.findById(req.params.id).populate('seatcode')
     
     return res.status(200).json({
-        success: true ? true : false,
+        status: true ? true : false,
         code: order ? 200 : 400,
-        mes: order? 'Order found' : 'Order not found',
-        rs: order
+        message: order? 'Order found' : 'Order not found',
+        result: order
     })    
 })
 
@@ -57,10 +57,10 @@ const updateOrder = asyncHandler(async (req: Request, res: Response) => {
     const response = await Order.findByIdAndUpdate(_id, updateData, { new: true })
     
     return res.status(200).json({
-        success: response ? true : false,
+        status: response ? true : false,
         code: response ? 200 : 400,
-        mes: response ? 'Update order successful' : 'Order not found',
-        rs: response ? response : 'Something wrong!'
+        message: response ? 'Update order successful' : 'Order not found',
+        result: response
     })
 })
 
@@ -71,9 +71,10 @@ const deleteOrder = asyncHandler(async (req: Request, res: Response) => {
     const response = await Order.findByIdAndDelete(_id)
     
     return res.status(200).json({
-        success: response ? true : false,
+        status: response ? true : false,
         code: response ? 200 : 400,
-        rs: response ? `Order had been deleted` : 'Order not found'
+        message: response ? 'Order had been deleted' : 'Order not found', 
+        result: response 
     })    
 })
 
