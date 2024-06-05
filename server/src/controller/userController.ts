@@ -12,21 +12,22 @@ const register = asyncHandler( async (req: Request, res: Response) => {
     
     if(!email || !password || !dob || !username || !phone)
         return res.status(400).json({
-        success: false,
+        status: false,
         code: 400,
-        rs: "Missing input"
+        message: 'Invalid input',
+        result: "Missing input"
     })
 
     const user = await User.findOne({email, phone})
     if(user)
-        throw new Error('User has existed')
+        throw new Error('User has existed')     
     else{
         const newUser = await User.create(req.body)
         return res.status(200).json({
-            success: newUser ? true : false,
+            status: newUser ? true : false,
             code: newUser ? 200 : 400,
-            mes: newUser ? "Create successfully" : "Can not create user",
-            rs: newUser ? newUser : 'Invalid information'
+            message: newUser ? "Create successfully" : "Can not create user",
+            result: newUser ? newUser : 'Invalid information'
         })
     }
 })
@@ -38,9 +39,10 @@ const login = asyncHandler( async (req: Request, res: Response) => {
     const { email, password } = req.body
     if(!email || !password)
     return res.status(400).json({
-        success: false,
+        status: false,
         code: 400,
-        rs: "Missing input"
+        message: 'Invalid input',
+        result: "Missing input"
     })
 
     const response = await User.findOne({ email })
@@ -71,10 +73,10 @@ const getCurrent = asyncHandler( async (req: Request, res: Response) => {
     const { _id } = req.user
     const user = await User.findById(_id).select('-refreshToken -password')
     return res.status(200).json({
-        success: user ? true : false,
+        status: user ? true : false,
         code: user ? 200 : 400,
-        mess : user ? 'User found' : 'User not found',
-        rs: user ? user : 'User not found'
+        message : user ? 'User found' : 'User not found',
+        result: user ? user : 'User not found'
     })
 })
 
@@ -86,9 +88,10 @@ const refreshAccessToken = asyncHandler(async(req: Request, res: Response) => {
     const rs = await jwt.verify(cookie.refreshToken, process.env.JWT_SECRET)
     const response = await User.findOne({ _id: rs._id, refreshToken: cookie.refreshToken })
     return res.status(200).json({
-        success: response ? true : false,
+        status: response ? true : false,
         code: response? 200 : 400,
-        rs: response ? generateAccessToken(response._id, response.role) : 'Refresh Token invalid'
+        message: response? 'Refresh token valid' : 'Refresh token invalid',
+        result: response ? generateAccessToken(response._id, response.role) : 'Refresh Token invalid'
     })
 })
 
@@ -104,7 +107,9 @@ const logout = asyncHandler(async(req: Request, res: Response) => {
     })
     return res.status(200).json({
         success: true,
-        rs: "Log out successfully"
+        code: 200,
+        message: 'Log out successfully',
+        result: 'Log out successfully'
     })
 })
 
@@ -135,7 +140,9 @@ const forgotPassword = asyncHandler(async(req: Request, res: Response) => {
 
     const rs = await sendMail(data)
     return res.status(200).json({
-        success: true,
+        status: true,
+        code: 200,
+        message: 'Send mail successfully',
         rs
     })
 })
@@ -151,10 +158,10 @@ const resetPassword = asyncHandler(async(req: Request, res: Response) => {
     user.passwordResetExpire = undefined
     await user.save()
     return res.status(200).json({
-        success: user ? true : false,
+        status: user ? true : false,
         code: user ? 200 : 400,
-        mes: user? 'Update password' : 'Something went wrong',
-        rs: user,
+        message: user? 'Update password' : 'Something went wrong',
+        result: user,
     })
 })
 
@@ -162,10 +169,10 @@ const resetPassword = asyncHandler(async(req: Request, res: Response) => {
 const getAllUser = asyncHandler(async(req: Request, res: Response) => {
     const response = await User.find().select('-refreshToken -password -role')
     return res.status(200).json({
-        success: response ? true : false,
+        status: response ? true : false,
         code: response ? 200 : 400, 
-        mes: response ? 'Get all users' : 'Can not get all users', 
-        rs: response
+        message: response ? 'Get all users' : 'Can not get all users', 
+        result: response
     })
 })
 
@@ -175,9 +182,10 @@ const deleteUser = asyncHandler(async(req: Request, res: Response) => {
     if(!_id) throw new Error('Please modified Id!!!')
     const response = await User.findByIdAndDelete(_id)
     return res.status(200).json({
-        success: response ? true : false,
+        status: response ? true : false,
         code: response ? 200 : 400,
-        rs: response ? `User with email ${response.email} had been deleted` : 'User not found'
+        message: response ? 'Delete user successfully' : 'User not found',
+        result: response ? `User with email ${response.email} had been deleted` : 'User not found'
     })
 })
 
@@ -187,10 +195,10 @@ const updateUser = asyncHandler(async(req: Request, res: Response) => {
     if(!_id || Object.keys(req.body).length === 0) throw new Error('Please modified information!!!')
     const response = await User.findByIdAndUpdate(_id, req.body, {new: true}).select('-password -role')
     return res.status(200).json({
-        success: response ? true : false,
+        status: response ? true : false,
         code: response ? 200 : 400,
-        mes: response ? `User with email ${response.email} had been updated` : 'Update user failed',
-        rs: response ? response : 'Something went wrong!!!!',
+        message: response ? `User with email ${response.email} had been updated` : 'Update user failed',
+        result: response ? response : 'Something went wrong!!!!',
     })
 })
 
@@ -200,10 +208,10 @@ const updateUserbyAdmin = asyncHandler(async(req: Request, res: Response) => {
     if(Object.keys(req.body).length === 0) throw new Error('Please modified information!!!')
     const response = await User.findByIdAndUpdate(_id, req.body, {new: true}).select('-password -role -refreshToken')
     return res.status(200).json({
-        success: response ? true : false,
+        status: response ? true : false,
         code: response ? 200 : 400,
-        mes: response ? `User with email ${response.email} had been updated` : 'Update user failed',
-        rs: response ? response : 'Something went wrong!!!!',
+        message: response ? `User with email ${response.email} had been updated` : 'Update user failed',
+        result: response ? response : 'Something went wrong!!!!',
     })
 })
 
@@ -213,10 +221,10 @@ const banUserByAdmin = asyncHandler(async(req: Request, res: Response) => {
     if(!_id) throw new Error('Please modified Id!!!')
     const response = await User.findByIdAndUpdate(_id, {isBlocked: true}, {new: true}).select('-password -role -refreshToken')
     return res.status(200).json({
-        success: response ? true : false,
+        status: response ? true : false,
         code: response ? 200 : 400,
-        mes: response ? `User with email ${response.email} had been ban` : 'Ban user failed',
-        rs: response ? response : 'Something went wrong!!!!'
+        message: response ? `User with email ${response.email} had been ban` : 'Ban user failed',
+        result: response ? response : 'Something went wrong!!!!'
     })
 })
 
@@ -228,8 +236,8 @@ const uploadImage= asyncHandler(async(req: Request, res: Response) => {
     return res.status(200).json({
         status: response ? true : false,
         code: response ? 200 : 400,
-        mes: response ? 'Image uploaded successfully' : 'Can not upload image',
-        rs: response ? response : 'Can not upload file!!!!'
+        message: response ? 'Image uploaded successfully' : 'Can not upload image',
+        result: response ? response : 'Can not upload file!!!!'
     })
 })
 
@@ -239,10 +247,10 @@ const updateRolebyAdmin = asyncHandler(async(req: Request, res: Response) => {
     if(!req.body.role) throw new Error('Please modified information!!!')
     const response = await User.findByIdAndUpdate(_id, {role: req.body.role}, {new: true}).select('-password -role -refreshToken')
     return res.status(200).json({
-        success: response ? true : false,
+        status: response ? true : false,
         code: response ? 200 : 400,
-        mes: response ? 'Update role successfull' : 'Can not update role',
-        rs: response ? response : 'Something went wrong!!!!'
+        message: response ? 'Update role successfull' : 'Can not update role',
+        result: response ? response : 'Something went wrong!!!!'
     })
 })
 
