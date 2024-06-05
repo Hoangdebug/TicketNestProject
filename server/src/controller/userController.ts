@@ -11,7 +11,7 @@ const register = asyncHandler( async (req: Request, res: Response) => {
     console.log(req.body);
     
     if(!email || !password || !dob || !username || !phone)
-    return res.status(400).json({
+        return res.status(400).json({
         success: false,
         code: 400,
         rs: "Missing input"

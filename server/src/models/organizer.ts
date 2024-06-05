@@ -7,7 +7,7 @@ var organizeSchema = new mongoose.Schema({
         required:true,
     },
     sponserBy:{
-        user: {type: mongoose.Type.ObjectId, ref:'User'},
+        user: {type: mongoose.Types.ObjectId, ref:'User'},
     },
     name:{
         type:String,
