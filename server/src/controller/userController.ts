@@ -233,14 +233,15 @@ const uploadImage= asyncHandler(async(req: Request, res: Response) => {
     })
 })
 
-const updateAddress = asyncHandler(async(req: Request, res: Response) => {
-    const { _id } = req.user
-    if(!req.body.address) throw new Error('Please modified information!!!')
-    const response = await User.findByIdAndUpdate(_id, {$push: {address: req.body.address}}, {new: true}).select('-password -role -refreshToken')
+
+const updateRolebyAdmin = asyncHandler(async(req: Request, res: Response) => {
+    const { _id } = req.params
+    if(!req.body.role) throw new Error('Please modified information!!!')
+    const response = await User.findByIdAndUpdate(_id, {role: req.body.role}, {new: true}).select('-password -role -refreshToken')
     return res.status(200).json({
         success: response ? true : false,
         code: response ? 200 : 400,
-        mes: response ? 'Update address successfull' : 'Can not update address',
+        mes: response ? 'Update role successfull' : 'Can not update role',
         rs: response ? response : 'Something went wrong!!!!'
     })
 })
@@ -257,7 +258,7 @@ module.exports = {
     deleteUser,
     updateUser,
     updateUserbyAdmin,
-    updateAddress,
     banUserByAdmin,
-    uploadImage
+    uploadImage,
+    updateRolebyAdmin
 }
