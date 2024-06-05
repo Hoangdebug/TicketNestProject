@@ -13,6 +13,8 @@ const initRoutes = (app: Application) => {
     app.use('/api/user', userRouter)
     app.use('/api/event', eventRouter)
     app.use('/api/order', orderRouter)
+    app.use('/api/seat', seatRouter)
+    app.use('/api/organizer', organizerRouter)
     app.use(notFound)
     app.use(errHandler)
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 const asyncHandler = require ("express-async-handler")
-const Order = require ('../models/orderModel')
+const Order = require ('../models/order')
 
 // Create Order
 const createOrder = asyncHandler(async (req: Request, res: Response) => {

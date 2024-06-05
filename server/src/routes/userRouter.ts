@@ -13,7 +13,6 @@ router.get('/forgotpassword', ctrls.forgotPassword)
 router.put('/resetpassword', ctrls.resetPassword)
 router.get('/', [verifyAccessToken, isAdmin] , ctrls.getAllUser)
 router.put('/current', [verifyAccessToken] , ctrls.updateUser)
-router.put('/address', [verifyAccessToken] , ctrls.updateAddress)
 //getuserbyid
 router.put('/:uid', [verifyAccessToken, isAdmin] , ctrls.updateUserbyAdmin)
 router.put('/ban/:uid',[verifyAccessToken, isAdmin] ,ctrls.banUserByAdmin)
