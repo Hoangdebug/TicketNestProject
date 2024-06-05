@@ -1,9 +1,9 @@
 import express from 'express'
 const router = express.Router()
-const eventRouter = require('../controller/eventController')
+const ctrls = require('../controller/eventController')
 
-router.post('/events', eventRouter.createEvent);
-router.get('/events', eventRouter.readEvents);
-router.put('/events/:id', eventRouter.updateEvent);
+router.post('/', ctrls.createEvent);
+router.get('/', ctrls.readEvent);
+router.put('/:id', ctrls.updateEvent);
 
 module.exports = router
