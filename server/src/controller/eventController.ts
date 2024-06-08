@@ -154,4 +154,5 @@ module.exports = {
     readEvent,
     updateEvent,
     staticEventFollowByMonth
+    // getTotalOrderByMonth,
 }
