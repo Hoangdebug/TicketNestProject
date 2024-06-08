@@ -7,4 +7,6 @@ router.post('/', [verifyAccessToken, isOrganizer] ,ctrls.createEvent);
 router.get('/',[verifyAccessToken, isOrganizer], ctrls.readEvent);
 router.put('/:id',[verifyAccessToken, isOrganizer], ctrls.updateEvent);
 
+router.get('/statistic/event', [verifyAccessToken, isOrganizer], ctrls.staticEventFollowByMonth);
+
 module.exports = router

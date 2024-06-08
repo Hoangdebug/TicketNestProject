@@ -1,7 +1,9 @@
-
 import { Request, Response } from 'express';
 const asyncHandler = require("express-async-handler")
 const Event = require('../models/event')
+const Order = require('../models/order');
+const Organize = require('../models/organizer');
+const mongoose = require('mongoose'); 
 
 //Create Event
 const createEvent = asyncHandler(async (req: Request, res: Response) => {
@@ -53,8 +55,33 @@ const updateEvent = asyncHandler(async (req: Request, res: Response) => {
     });
 })
 
+//Static Event By Month
+const staticEventFollowByMonth = asyncHandler(async (req: Request, res: Response) => {
+    const events = await Event.aggregate([
+        {
+            $group: {
+                _id: { $month: "$time" },
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $sort: { "_id": 1 }
+        }
+    ]);
+
+    return res.status(200).json({
+        status: events ? true : false,
+        code: events ? 200 : 400,
+        message: events ? 'Get event statistics successfully' : 'Failed to get event statistics',
+        result: events
+    });
+})
+
+//Total order by Month role Organizer
+
 module.exports = {
     createEvent,
     readEvent,
-    updateEvent
+    updateEvent,
+    staticEventFollowByMonth
 }
