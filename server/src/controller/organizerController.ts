@@ -1,4 +1,5 @@
 const organizer = require('../models/organizer');
+const user = require('../models/user')
 const asyncHandler = require('express-async-handler');
 import { Request, Response } from "express"; 
 
@@ -41,8 +42,35 @@ const updateOrganizer = asyncHandler(async (req: Request, res: Response) => {
     })
 })
 
+//function to static organizer
+
+ const staticOrganizer = asyncHandler(async(req: Request, res: Response) => {
+    const countOrganizer = await organizer.countDocuments({})
+    return res.status(200).json({
+        status: countOrganizer ? true : false,
+        code: countOrganizer ? 200 : 400,
+        message : countOrganizer? " Static Organizer" : " Can not static organizer",
+        result: countOrganizer? countOrganizer  : "Invalid information"
+    })
+ })
+
+//function to static user 
+
+const staticUser = asyncHandler(async(req: Request, res: Response)=>{
+    const countUser = await user.countDocuments({})
+    return res.status(200).json({
+        status: countUser? true : false,
+        code: countUser ? 200 : 400,
+        message : countUser? " Static User" : " Can not static users",
+        result: countUser? countUser  : "Invalid information"
+    })
+})
+
+
 module.exports ={
     createOrganizer,
     getOrganizer,
-    updateOrganizer
+    updateOrganizer,
+    staticOrganizer,
+    staticUser
 }
