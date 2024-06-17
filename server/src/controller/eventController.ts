@@ -1,9 +1,11 @@
+import { count } from 'console';
 import { Request, Response } from 'express';
+import moment from 'moment';
 const asyncHandler = require("express-async-handler")
 const Event = require('../models/event')
 const Order = require('../models/order');
 const Organize = require('../models/organizer');
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 
 //Create Event
 const createEvent = asyncHandler(async (req: Request, res: Response) => {
@@ -17,10 +19,10 @@ const createEvent = asyncHandler(async (req: Request, res: Response) => {
         price,
         place,
         status
-    });    
+    });
     await event.save();
     return res.status(200).json({
-        status: event ? true : false ,
+        status: event ? true : false,
         code: event ? 200 : 400,
         message: event ? 'Event created successfully' : 'Failed to create event',
         result: event
@@ -35,7 +37,7 @@ const readEvent = asyncHandler(async (req: Request, res: Response) => {
     return res.status(200).json({
         status: event ? true : false,
         code: event ? 200 : 404,
-        message: event ? 'Get event information successfully' : 'Event not found', 
+        message: event ? 'Get event information successfully' : 'Event not found',
         result: event
     });
 })
@@ -50,7 +52,7 @@ const updateEvent = asyncHandler(async (req: Request, res: Response) => {
     return res.status(200).json({
         status: event ? true : false,
         code: event ? 200 : 400,
-        message: event ? 'Update event successfully' : 'Event not found', 
+        message: event ? 'Update event successfully' : 'Event not found',
         result: event
     });
 })
@@ -149,10 +151,13 @@ const staticEventFollowByMonth = asyncHandler(async (req: Request, res: Response
 //     });
 // })
 
+
+
+
 module.exports = {
     createEvent,
     readEvent,
     updateEvent,
-    staticEventFollowByMonth
+    staticEventFollowByMonth,
     // getTotalOrderByMonth,
 }
