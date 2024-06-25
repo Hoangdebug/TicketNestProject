@@ -1,4 +1,5 @@
 import { NextFunction, Response, Request } from "express"
+import { Role } from "~/utils/Common/enum";
 
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
@@ -28,7 +29,7 @@ const verifyAccessToken = asyncHandler((req: CustomRequest, res: Response, next:
 
 const isAdmin = asyncHandler((req: CustomRequest, res: Response, next: NextFunction) => {
     const {role} = req.user
-    if(role !== 'ROLE_ADMIN')
+    if(!role.includes(Role.ROLE_ADMIN))
     return res.status(401).json({
         success: false,
         mes: 'Require admin authority to access this page'
