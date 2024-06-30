@@ -1,4 +1,4 @@
-import { Role } from './../utils/Common/enum';
+import { Role, Status, TypeUser } from './../utils/Common/enum';
 import * as mongoose from "mongoose"
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
@@ -37,11 +37,9 @@ var userSchema = new mongoose.Schema({
         required:true,
     },
     role: {
-        type: [{
-            type: String,
-            enum: Role
-        }],
-        default: [Role.ROLE_USER]
+        type: String,
+        enum: Role,
+        default: Role.ROLE_USER
     },
     address: String,
     isBlocked:{
@@ -62,7 +60,13 @@ var userSchema = new mongoose.Schema({
     },
     type:{
         type:String,
-        default:'User',
+        enum: TypeUser,
+        default: TypeUser.USER,
+    },
+    organizerRequest :{
+        type: String,
+        enum: Status,
+        default: null,
     }
 },{
     timestamps: true,

@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 const { generateAccessToken, generateRefreshToken } = require('../config/jwt')
 const User = require('../models/user')
+const Organizer = require('../models/organizer')
 const asyncHandler = require("express-async-handler")
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
@@ -121,7 +122,7 @@ const logout = asyncHandler(async(req: Request, res: Response) => {
 //Check token có giống với token mà sever gửi mail hay không
 //Change password 
 
-const forgotPassword = asyncHandler(async(req: Request, res: Response) => {
+const forgotPassword = asyncHandler(async(req: Request, res: Response) => { 
     const { email } = req.query
     if( !email ) throw new Error('Missing email')
     const user = await User.findOne({ email })
@@ -130,8 +131,49 @@ const forgotPassword = asyncHandler(async(req: Request, res: Response) => {
     await user.save()
 
     //Send mail
-    const html = `Please click on below link to change your password!! Link will expired in 15 minutes from now 
-        <br> <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}>Click here!!!</a>`
+    const html = `
+    <div style="font-family: Arial, sans-serif; padding: 48px;">
+    <img style="width: 100%; height: 100%;" src="" alt="Logo" />
+    <div style="padding: 10px; gap: 32px;">
+        <h1 style="font-size: 45px; margin-bottom: 10px;">Hi ${user.username},</h1>
+        <div style="font-size: 20px; line-height: 3; margin-bottom: 1rem;">
+            <p>You have requested a password reset for your TicketNest account. Please click on the button below.</p>
+        </div>
+        <br>
+        <br>
+        <div style="text-align: center;">
+            <a href="${process.env.URL_SERVER}/api/user/reset-password/${resetToken}" 
+                style="display: inline-block; padding: 20px 45px; background-color: #396961; color: white; 
+                border-radius: 10px; max-width: 400px; font-size: 20px; 
+                text-decoration: none; text-align: center;">Reset Password</a>
+        </div>
+        <div style="font-size: 20px; line-height: 3; margin-bottom: 1rem;">
+            <p>If you did not make this request, you can safely ignore this email.</p>
+            <p>Best Regards, <br><strong style="color: #396961;">TicketNest team</strong></p>
+        </div>
+        <hr>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="https://www.facebook.com/your-facebook-page-url" target="_blank" style="text-decoration: none; margin: 0 10px;">
+                <img src="" alt="Facebook" style="width: 60px; height: 60px;">
+            </a>
+            <a href="https://www.instagram.com/your-instagram-page-url" target="_blank" style="text-decoration: none; margin: 0 10px;">
+                <img src="" alt="Instagram" style="width: 60px; height: 60px;">
+            </a>
+        </div>
+        <hr>
+        <div style="text-align: center;">
+            <p>&copy; 2024 TicketNest. All rights reserved.</p>
+            <br>
+            <p>You are receiving this mail because you registered to join the TicketNest platform as a user or a creator. This also shows that you agree to our Terms of Use and Privacy Policies. If you no longer want to receive mails from us, click the unsubscribe link below to unsubscribe.</p>
+            <p>
+                <a href="#" style="color: black; text-decoration: none;">Privacy Policy</a> •
+                <a href="#" style="color: black; text-decoration: none;">Terms of Service</a> •
+                <a href="#" style="color: black; text-decoration: none;">Help Center</a> •
+                <a href="#" style="color: black; text-decoration: none;">Unsubscribe</a>
+            </p>
+        </div>
+    </div>
+</div>`
  
     const data = {
         email,
@@ -143,7 +185,7 @@ const forgotPassword = asyncHandler(async(req: Request, res: Response) => {
         status: true,
         code: 200,
         message: 'Send mail successfully',
-        rs
+        result: rs ? rs : "Failed to send mail"
     })
 })
 
@@ -254,6 +296,56 @@ const updateRolebyAdmin = asyncHandler(async(req: Request, res: Response) => {
     })
 })
 
+const userRequestOrganizer = asyncHandler(async(req: Request, res: Response) => {
+    const { _id } = req.user
+    const { name, description } = req.body;
+    if(!name || !description) throw new Error('Missing information!!!')
+    const user = await User.findById(_id)
+    console.log(user)
+    if(!user) throw new Error('User not found')
+    
+    // check user request exists
+
+    if(user.organizerRequest == 'Processing' ) throw new Error(' You have already requested to become an organizer') 
+    if(!req.body) throw new Error(`Please check your request ${req.body}`)
+    user.organizerRequest = 'Processing'
+    await user.save()
+    const response = await Organizer.create({name: name, description: description, sponsorBy: _id})
+    console.log(response)
+    return res.status(200).json({
+        status: response ? true : false,
+        code: response ? 200 : 400,
+        message: response ? 'User request has been sent' : 'Can not send user request',
+        result: response ? response : 'Something went wrong!!!!'
+    })
+})
+
+const organizerPermitByAdmin = asyncHandler(async(req: Request, res: Response) => {
+    const { uid } = req.params
+    console.log(uid)
+
+    const { permit } = req.body;
+    console.log(permit)
+    const response = await User.findById(uid)
+    if(!response) throw new Error('User not found')
+    
+    if(response.organizerRequest = 'Processing'){
+        if( permit == 'Accepted')
+            response.role = "ROLE_ORGANIZER"
+            response.type = "Organizer"
+            response.organizerRequest = permit
+            await response.save()
+    }
+    console.log(response.organizerRequest)
+
+    return res.status(200).json({
+        status: response ? true : false,
+        code: response ? 200 : 400,
+        message: response ? `User with email ${response.email} has been promoted to organizer.` : 'Can not send user request',
+        result: response ? response : 'Something went wrong!!!!'
+    })
+})
+
 module.exports = {
     register,
     login,
@@ -268,5 +360,7 @@ module.exports = {
     updateUserbyAdmin,
     banUserByAdmin,
     uploadImage,
-    updateRolebyAdmin
+    updateRolebyAdmin,
+    userRequestOrganizer,
+    organizerPermitByAdmin
 }
