@@ -36,6 +36,10 @@ var eventSchema = new mongoose.Schema({
         type:String,
         default: 'Pending',
         enum:['Cancelled', 'Pending', 'Successed']
+    },
+    created_by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     }
 });
 
