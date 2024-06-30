@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 
 //Create Event
 const createEvent = asyncHandler(async (req: Request, res: Response) => {
+    const { _id } = req.user;
     const { name, description, image, time, ticket_number, price, place, status } = req.body;
     const event = new Event({
         name,
@@ -18,7 +19,8 @@ const createEvent = asyncHandler(async (req: Request, res: Response) => {
         ticket_number,
         price,
         place,
-        status
+        status,
+        created_by: _id
     });
     await event.save();
     return res.status(200).json({
@@ -40,6 +42,16 @@ const readEvent = asyncHandler(async (req: Request, res: Response) => {
         message: event ? 'Get event information successfully' : 'Event not found',
         result: event
     });
+})
+
+const getAllEvents = asyncHandler(async (req: Request, res: Response) => {
+    const response = await Event.find()
+    return res.status(200).json({
+        status: response? true : false,
+        code: response? 200 : 400,
+        message: response? 'Get all events successfully' : 'Failed to get all events',
+        result: response
+    })
 })
 
 //Update Event
@@ -157,6 +169,7 @@ const staticEventFollowByMonth = asyncHandler(async (req: Request, res: Response
 module.exports = {
     createEvent,
     readEvent,
+    getAllEvents,
     updateEvent,
     staticEventFollowByMonth,
     // getTotalOrderByMonth,

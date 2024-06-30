@@ -4,7 +4,8 @@ const ctrls = require('../controller/eventController')
 const { verifyAccessToken, isAdmin, isOrganizer} = require('../middlewares/verifyToken')
 
 router.post('/', [verifyAccessToken] ,ctrls.createEvent);
-router.get('/',[verifyAccessToken, isOrganizer], ctrls.readEvent);
+router.get('/', ctrls.getAllEvents)
+router.get('/get-event/:id',[verifyAccessToken, isOrganizer], ctrls.readEvent);
 router.put('/:id',[verifyAccessToken, isOrganizer], ctrls.updateEvent);
 
 router.get('/statistic/event', [verifyAccessToken, isOrganizer], ctrls.staticEventFollowByMonth);
