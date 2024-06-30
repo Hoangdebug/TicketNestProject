@@ -15,12 +15,11 @@ const sendMail =  asyncHandler(async ({email, html} : {email: string, html: stri
     
         // send mail with defined transport object
         const info = await transporter.sendMail({
-            from: '"VHEcommerce" <no-reply@example.com>', // sender address
+            from: '"TicketNest" <no-reply@example.com>', // sender address
             to: email, // list of receivers
             subject: "Forgot password", // Subject line
             text: `Hello,\n\nPlease use the following code to reset your password:\n`,
             html: html, // html body
-            // text: `From VHEcommerce`
           });
           
          return info 

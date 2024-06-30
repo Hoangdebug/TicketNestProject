@@ -6,6 +6,7 @@ const uploader = require('../config/cloudinary.config')
 
 router.post('/register', ctrls.register)
 router.post('/login', ctrls.login)
+router.post('/be-organizer', verifyAccessToken, ctrls.userRequestOrganizer)
 router.get('/current', verifyAccessToken, ctrls.getCurrent)
 router.put('/refreshtoken', ctrls.refreshAccessToken)
 router.get('/logout', ctrls.logout)
@@ -16,5 +17,6 @@ router.put('/current', [verifyAccessToken] , ctrls.updateUser)
 //getuserbyid
 router.put('/:uid', [verifyAccessToken, isAdmin] , ctrls.updateUserbyAdmin)
 router.put('/ban/:uid',[verifyAccessToken, isAdmin] ,ctrls.banUserByAdmin)
+router.put('/role/:uid',[verifyAccessToken, isAdmin] , ctrls.organizerPermitByAdmin)
 router.put('uploadimage/:uid',[verifyAccessToken], uploader.array('images', 10), ctrls.uploadImage)
 module.exports = router

@@ -6,8 +6,8 @@ var organizeSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    sponserBy:{
-        user: {type: mongoose.Types.ObjectId, ref:'User'},
+    sponsorBy:{
+        type: mongoose.Types.ObjectId, ref:'User'
     },
     name:{
         type:String,
@@ -16,6 +16,8 @@ var organizeSchema = new mongoose.Schema({
     Image:{
         type:String,
     },
+},{
+    timestamps: true,
 });
 
 //Export the model
