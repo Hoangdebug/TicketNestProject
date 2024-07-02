@@ -15,3 +15,15 @@ export enum Status {
     ACCEPTED = 'Accepted',
     REJECTED = 'Rejected',
 }
+
+export enum EventTicket {
+    BASE = '50',
+    MEDIUM = '60',
+    LARGE = '70',
+}
+
+export enum EventType {
+    MUSIC = 'Music',
+    DRAMATIC = 'Dramatic',
+    WORKSHOP = 'Workshop',
+}

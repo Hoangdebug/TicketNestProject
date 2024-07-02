@@ -1,4 +1,4 @@
-import { timeStamp } from "console";
+import { EventTicket, EventType } from "~/utils/Common/enum";
 
 const mongoose = require('mongoose'); // Erase if already required
 
@@ -16,21 +16,30 @@ var eventSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    time:{
+    start_date:{
+        type:Date,
+        required:true,
+    },
+    end_date:{
         type:Date,
         required:true,
     },
     ticket_number:{
-        type:Number,
-        enum:['50', '60', '70']
+        type:String,
+        enum: EventTicket
     },
     price:{
         type:Number,
         required:true,
     },
-    place:{
+    location:{
         type:String,
         required:true,
+    },
+    event_type:{
+        type:String,
+        enum: EventType,
+        default: null,
     },
     status:{
         type:String,
