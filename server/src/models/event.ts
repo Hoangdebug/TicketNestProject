@@ -16,17 +16,18 @@ var eventSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    start_date:{
+    day_start:{
         type:Date,
         required:true,
     },
-    end_date:{
+    day_end:{
         type:Date,
         required:true,
     },
     ticket_number:{
         type:String,
-        enum: EventTicket
+        enum: EventTicket,
+        default: null,
     },
     price:{
         type:Number,
