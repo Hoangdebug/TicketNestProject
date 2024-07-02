@@ -298,7 +298,7 @@ const updateRolebyAdmin = asyncHandler(async(req: Request, res: Response) => {
 
 const userRequestOrganizer = asyncHandler(async(req: Request, res: Response) => {
     const { _id } = req.user
-    const { name, description } = req.body;
+    const { name, description, contact_email, contact_phone } = req.body;
     if(!name || !description) throw new Error('Missing information!!!')
     const user = await User.findById(_id)
     console.log(user)
@@ -310,7 +310,9 @@ const userRequestOrganizer = asyncHandler(async(req: Request, res: Response) => 
     if(!req.body) throw new Error(`Please check your request ${req.body}`)
     user.organizerRequest = 'Processing'
     await user.save()
-    const response = await Organizer.create({name: name, description: description, sponsorBy: _id})
+    const response = await Organizer.create({name: name, description: description, 
+        contact_email: contact_email, contact_phone: contact_phone , sponsor_by: _id
+    })
     console.log(response)
     return res.status(200).json({
         status: response ? true : false,
@@ -322,10 +324,8 @@ const userRequestOrganizer = asyncHandler(async(req: Request, res: Response) => 
 
 const organizerPermitByAdmin = asyncHandler(async(req: Request, res: Response) => {
     const { uid } = req.params
-    console.log(uid)
 
     const { permit } = req.body;
-    console.log(permit)
     const response = await User.findById(uid)
     if(!response) throw new Error('User not found')
     

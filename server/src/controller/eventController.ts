@@ -10,16 +10,18 @@ const mongoose = require('mongoose');
 //Create Event
 const createEvent = asyncHandler(async (req: Request, res: Response) => {
     const { _id } = req.user;
-    const { name, description, image, time, ticket_number, price, place, status } = req.body;
+    const { name, description, image, day_start, day_end, ticket_number, price, location, status, event_type } = req.body;
     const event = new Event({
         name,
         description,
         image,
-        time,
+        day_start,
+        day_end,
         ticket_number,
         price,
-        place,
+        location,
         status,
+        event_type,
         created_by: _id
     });
     await event.save();

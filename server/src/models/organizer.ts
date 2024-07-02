@@ -6,16 +6,19 @@ var organizeSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    sponsorBy:{
+    sponsor_by:{
         type: mongoose.Types.ObjectId, ref:'User'
     },
     name:{
         type:String,
         required:true,
     },
-    Image:{
+    contact_email:{
         type:String,
     },
+    contact_phone:{
+        type:String,
+    }
 },{
     timestamps: true,
 });
